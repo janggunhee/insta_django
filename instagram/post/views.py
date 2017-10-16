@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from .forms import PostForm
 from .models import Post
 
 
@@ -36,14 +37,17 @@ def post_create(request):
         request.POST와 request.FIlES를 print문으로 출력
         'GET'이면 템플릿 파일을 보여주는 기존 로직을 그대로 실행
     """
-    photo = request.FILES.get('photo')
-    if request.method == 'POST' and photo:
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
         # 1. 파일이 오지 않았을 경우, GET 요청과 같은 결과를 리턴
         #   1-1. 단 return render(.....)하는 같은 함수를 두변 호출 하지 말 것
-
-        photo = request.FILES['photo']
-        post = Post.objects.create(photo=photo)
-        return HttpResponse(f'<img src="{Post.photo.url}">')
+        if form.is_valid():
+            print(form.cleand_data)
+            post = Post.objects.create(
+                photo=form.cleaned_data['photo'])
+            return HttpResponse(f'<img src="{post.photo.url}">')
+        else:
+            return HttpResponse('Form invailid!')
     else:
         return render(request, 'post/post_create.html')
 

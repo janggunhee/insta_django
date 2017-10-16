@@ -24,7 +24,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 # instagram_project/instagram/static/
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
 
+#
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+#instagram_project/instagram/template/
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
 

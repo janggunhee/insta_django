@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
-
+from member.views import signup
 from post import views
 
 urlpatterns = [
@@ -34,6 +34,9 @@ urlpatterns = [
     url(r'^post/(?P<post_pk>\d+)/comment/create/$',
         views.comment_create,
         name='comment_create'),
+    url(r'^member/signup$',
+        signup,
+        name='signup'),
 ]
 urlpatterns += static(
     settings.MEDIA_URL,

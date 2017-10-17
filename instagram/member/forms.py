@@ -2,6 +2,29 @@ from django import forms
 from django.contrib.auth.models import User
 
 
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control'
+            }
+        )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
+    # def clean_usename(self):
+    #     data=self.cleaned_data['username']
+    #
+    #     if
+
+
 class UserForm(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(
@@ -28,4 +51,7 @@ class UserForm(forms.Form):
             raise forms.ValidationError("사용자가 이미 존재 합니다.")
 
         return data
+
+
+
 

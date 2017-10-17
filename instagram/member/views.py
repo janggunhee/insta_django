@@ -1,10 +1,10 @@
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import authenticate, login as django_login, get_user_model
 from django.contrib.auth.models import User
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from member.forms import UserForm
+from .forms import UserForm
 
 User = get_user_model()
 
@@ -18,7 +18,7 @@ def login(request):
                 password=password
             )
             if user is not None:
-                login(request, user)
+                django_login(request, user)
                 return redirect('post_list')
             else:
                 return HttpResponse('로그인 실패. 다시 시도 해보세요')

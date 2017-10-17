@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
-from member.views import signup
+from member.views import signup, login
 from post import views as post_views
 
 urlpatterns = [
@@ -38,7 +38,11 @@ urlpatterns = [
         signup,
         name='signup'),
     url(r'^member/login/$',
-        name='login')
+        login,
+        name='login'),
+    # url(r'^member/login/$',
+    #     logout,
+    #     name='logout'),
 ]
 urlpatterns += static(
     settings.MEDIA_URL,

@@ -37,6 +37,8 @@ urlpatterns = [
     url(r'^member/signup$',
         signup,
         name='signup'),
+    url(r'^member/login/$',
+        name='login')
 ]
 urlpatterns += static(
     settings.MEDIA_URL,

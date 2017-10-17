@@ -12,8 +12,11 @@
 </head>
 <body>
 	<div class="container">
-		<h1>Instagram</h1>
-		<hr>
+		<a href="{% url 'post_list' %}">
+		<h1>Instagram</h1></a>
+		<<p>
+		{% if user.is_authenticated %}
+			{{ user.username }}
 		{% block content %}
 		{% endblock %}
 	</div>

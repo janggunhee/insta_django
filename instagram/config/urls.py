@@ -1,6 +1,6 @@
 """instagram URL Configuration
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+The `urlpatterns` list routes URLs to post_view. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
 Examples:
 Function views
@@ -18,21 +18,21 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from member.views import signup
-from post import views
+from post import views as post_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^post/$',
-        views.post_list,
+        post_views.post_list,
         name='post_list'),
     url(r'^post/create/$',
-        views.post_create,
+        post_views.post_create,
         name='post_create'),
     url(r'^post/(?P<post_pk>\d+)/$',
-        views.post_detail,
+        post_views.post_detail,
         name='post_detail'),
     url(r'^post/(?P<post_pk>\d+)/comment/create/$',
-        views.comment_create,
+        post_views.comment_create,
         name='comment_create'),
     url(r'^member/signup$',
         signup,

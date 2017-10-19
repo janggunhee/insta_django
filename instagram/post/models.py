@@ -1,6 +1,10 @@
+from django.conf import settings
 from django.db import models
 
-from config import settings
+
+class PostManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().exclude(author=None)
 
 
 class Post(models.Model):
@@ -13,8 +17,11 @@ class Post(models.Model):
     photo = models.ImageField(upload_to='post')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    objects = PostManager()
+
     class Meta:
         ordering = ['-created_at']
+
 
 class PostComment(models.Model):
     author = models.ForeignKey(

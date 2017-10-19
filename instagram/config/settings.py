@@ -14,6 +14,8 @@ import os
 
 # instagram_project/instagram/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# custome user model
+AUTH_USER_MODEL = 'member.User'
 # instagram_project/
 ROOT_DIR = os.path.dirname(BASE_DIR)
 # instagram_project/.config_secret/
@@ -68,9 +70,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_extensions',
+
     'config',
 
     'post',
+
+    'member',
 ]
 
 MIDDLEWARE = [

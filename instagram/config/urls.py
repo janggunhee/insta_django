@@ -1,6 +1,6 @@
 """instagram URL Configuration
 
-The `urlpatterns` list routes URLs to post_view. For more information please see:
+The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
 Examples:
 Function views
@@ -14,35 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
-from member.views import signup, login
+
 from post import views as post_views
+from member import views as member_views
 
 urlpatterns = [
+    # Django admin
     url(r'^admin/', admin.site.urls),
-    url(r'^post/$',
-        post_views.post_list,
-        name='post_list'),
-    url(r'^post/create/$',
-        post_views.post_create,
-        name='post_create'),
-    url(r'^post/(?P<post_pk>\d+)/$',
-        post_views.post_detail,
-        name='post_detail'),
-    url(r'^post/(?P<post_pk>\d+)/comment/create/$',
-        post_views.comment_create,
-        name='comment_create'),
-    url(r'^member/signup$',
-        signup,
-        name='signup'),
-    url(r'^member/login/$',
-        login,
-        name='login'),
-    # url(r'^member/login/$',
-    #     logout,
-    #     name='logout'),
+    url(r'^post/', include('post.urls', namespace='post')),
+    url(r'^member/', include('member.urls', namespace='member')),
+
 ]
 urlpatterns += static(
     settings.MEDIA_URL,

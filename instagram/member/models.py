@@ -17,9 +17,12 @@ class User(AbstractUser):
         blank=True)
     age = models.IntegerField()
 
+    #like_posts = MTM으로 연결
+
     objects = UserManager()
 
-    # REQUIRED_FIELDS = AbstractUser.REQUIRED_FIELDS + ['age']
+    # def like_post(self, post):
+    # 자신의 like_posts에 해당 내용 추가
 
 
 

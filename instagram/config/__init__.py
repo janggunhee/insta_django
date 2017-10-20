@@ -16,7 +16,7 @@ member  앱을 생성
     input 2개를 구현 
     name은 각각 username, password
     
-2. view.py
+2. views.py
     def signup(request):
     request.POST 전달된  username, password 값 이용해 
     새유저를 생성 (create_user()메서드를 사용)

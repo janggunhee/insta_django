@@ -48,7 +48,6 @@ class LoginForm(forms.Form):
     def _login(self, request):
         """
         django.contrib.auth.login(request)를 실행
-
         :param request: django.contrib.auth.login()에 주어질 HttpRequest객체
         :return: None
         """
@@ -77,6 +76,13 @@ class SignupForm(forms.Form):
         widget=forms.PasswordInput(
             attrs={
                 'class': 'form-control'
+            }
+        )
+    )
+    age = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={
+                'class': 'form-control',
             }
         )
     )
@@ -115,7 +121,9 @@ class SignupForm(forms.Form):
         """
         username = self.cleaned_data['username']
         password = self.cleaned_data['password']
+        age = self.cleaned_data['age']
         return User.objects.create_user(
             username=username,
-            password=password
+            password=password,
+            age=age,
         )

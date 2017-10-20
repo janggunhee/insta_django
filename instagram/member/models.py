@@ -17,6 +17,8 @@ class User(AbstractUser):
         blank=True)
     age = models.IntegerField()
 
+    objects = UserManager()
+
     # REQUIRED_FIELDS = AbstractUser.REQUIRED_FIELDS + ['age']
 
 

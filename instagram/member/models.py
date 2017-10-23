@@ -43,6 +43,21 @@ class User(AbstractUser):
         verbose_name = '사용자'
         verbose_name_plural = f'{verbose_name} 목록'
 
+    def follow_toggle(self, user):
+        # 1. 주어진 user가 User객체인지 확인
+        #    아니면 raise ValueError()
+        # 2. 주어진 user를 follow하고 있으면 해제
+        #    안하고 있으면 follow 함
+
+        if not isinstance(user, User):
+            raise ValueError('"user" agrgument must be User instance!')
+
+        relation, relation_created = self.following_user_relations.get_or_create(to_user=user)
+        if relation_created:
+            return False
+        relation.delete()
+        return True
+
 
 class Relation(models.Model):
     # User의 follow목록을 가질 수 있도록

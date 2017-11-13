@@ -40,7 +40,10 @@ class SignupSerializer(serializers.ModelSerializer):
             return User.objects.create_user(
                 username=validated_data['username'],
                 password=validated_data['password'],
+                img_profile=validated_data['img_profile'],
+                age=validated_data['age'],
             )
+
         @staticmethod
         def get_token(obj):
             # token, token_create = Token.objects.get_or_create(user=obj)

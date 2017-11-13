@@ -1,12 +1,10 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-
-from rest_framework.compat import authenticate
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.serializer import UserSerializer, SignupSerializer
+from .serializer import UserSerializer, SignupSerializer
 
 User = get_user_model()
 
@@ -16,14 +14,12 @@ class Login(APIView):
 
         username = request.data['username']
         password = request.data['password']
-
         user = authenticate(
             username=username,
             password=password,
         )
         if user:
             # 'user'키에 다른 dict로 유저에 대한 모든 정보를 보내줌
-
             token, token_created = Token.objects.get_or_create(user=user)
             data = {
                 'token': token.key,
@@ -31,30 +27,30 @@ class Login(APIView):
                 'user': UserSerializer(user).data
             }
             return Response(data, status=status.HTTP_200_OK)
-
-        else:
-            data = {
-                'message': 'Invalid credentials'
-            }
-            return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+        data = {
+            'message': 'Invalid credentials'
+        }
+        return Response(data, status=status.HTTP_401_UNAUTHORIZED)
 
 class Singup(APIView):
     def post(self, request):
-
         serializer = SignupSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        # 회원가입 후 토큰 생성, 유저정보 및 토큰 키 반환
         # username = request.data['username']
         # password = request.data['password']
         #
+        # if User.objects.filter(username=username).exists():
+        #     return Response({'message': 'Username already exist'})
+        #
         # user = User.objects.create_user(
         #     username=username,
-        #     password=password
+        #     password=password,
         # )
-        #
         # token = Token.objects.create(user=user)
         # data = {
         #     'user': UserSerializer(user).data,

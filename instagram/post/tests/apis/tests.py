@@ -1,12 +1,17 @@
+import filecmp
 import io
 from random import randint
+
+import os
 
 from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.urls import reverse, resolve
+
 from rest_framework import status
 from rest_framework.test import APILiveServerTestCase
 
+from config import settings
 from post.apis import PostList
 from post.models import Post
 
@@ -89,6 +94,45 @@ class PostListViewTest(APILiveServerTestCase):
         response = self.client.get(self.URL_API_POST_LIST)
         # author가 없는 Post개수는 response에 포함되지 않는지 확인
         self.assertEqual(len(response.data), num_posts)
+
+    def test_create_post(self):
+        """
+        Post Create가 되는지 확인
+        :return:
+        """
+        # test용 user 생성
+        user = self.create_user()
+        # 해당 user를 현재 client에 강제로 인증
+        self.client.force_authenticate(user=user)
+        # test 이미지 파일의 경로
+        path = os.path.join(settings.STATIC_DIR, 'test', '1122.png')
+        print(path)
+
+        with open(path, 'rb') as photo:
+            response = self.client.post(self.URL_API_POST_LIST, {
+                'photo': photo,
+            })
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(Post.objects.count(), 1)
+
+        # upload를 시도한 파일 (path경로의 파일)과
+        # 실제 업로드 된 파일 (새로 생성된 Post의 photo 필드
+        post = Post.objects.get(pk=response.data['pk'])
+
+        # 파일 시스템에서 두 파일을 비교할 경우
+        self.assertTrue(filecmp.cmp(path, post.photo.file.name))
+
+        # # S3에 올라간 파일을 비교해야 하는 경우
+        # url = post.photo.url
+        # response = requests.get(url)
+        # with NamedTemporaryFile(suffix='.jpg', delete=False) as temp_file:
+        #     temp_file.write(response.content)
+        # self.assertTrue(filecmp.cmp(path, temp_file.name))
+
+
+
 
 
 

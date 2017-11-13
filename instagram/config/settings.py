@@ -85,12 +85,14 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
 
     'config',
     'post',
     'member',
 
-    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -104,7 +106,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 
 ]
 

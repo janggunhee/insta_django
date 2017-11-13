@@ -16,9 +16,15 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # custome user model
 AUTH_USER_MODEL = 'member.User'
-
 LOGIN_URL = 'member:login'
 
+# DRF
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
 # instagram_project/
 ROOT_DIR = os.path.dirname(BASE_DIR)
 # instagram_project/.config_secret/

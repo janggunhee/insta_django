@@ -1,5 +1,4 @@
-import token
-
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
@@ -7,8 +6,9 @@ from rest_framework.compat import authenticate
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.serializer import UserSerializer
+from member.serializer import UserSerializer, SignupSerializer
 
+User = get_user_model()
 
 class Login(APIView):
     def post(self, request, *args, **kwargs):
@@ -37,3 +37,27 @@ class Login(APIView):
                 'message': 'Invalid credentials'
             }
             return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+
+class Singup(APIView):
+    def post(self, request):
+
+        serializer = SignupSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # username = request.data['username']
+        # password = request.data['password']
+        #
+        # user = User.objects.create_user(
+        #     username=username,
+        #     password=password
+        # )
+        #
+        # token = Token.objects.create(user=user)
+        # data = {
+        #     'user': UserSerializer(user).data,
+        #     'token': token.key,
+        # }
+        # return Response(data)

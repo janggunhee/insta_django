@@ -143,6 +143,7 @@ class SignupForm(UserCreationForm):
             'class': 'form-control',
         })
 
+
     class Meta:
         model = User
         fields = (

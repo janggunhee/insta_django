@@ -3,23 +3,28 @@ from django.contrib.auth.models import (
     UserManager as DjangoUserManager
 )
 from django.db import models
+from rest_framework.authtoken.models import Token
 
 
 class UserManager(DjangoUserManager):
     def create_superuser(self, *args, **kwargs):
         return super().create_superuser(age=30, *args, **kwargs)
 
+    def create_facebook_user(self, facebook_user_id):
+        # Facebook type의 유저를 생성
+        pass
+
 
 class User(AbstractUser):
     USER_TYPE_FACEBOOK = 'f'
     USER_TYPE_DJANGO = 'd'
-    CHOICE_USER_TYPE = (
-        (USER_TYPE_FACEBOOK, 'facebook'),
+    CHOICES_USER_TYPE = (
+        (USER_TYPE_FACEBOOK, 'Facebook'),
         (USER_TYPE_DJANGO, 'Django'),
     )
     user_type = models.CharField(
         max_length=1,
-        choices=CHOICE_USER_TYPE
+        choices=CHOICES_USER_TYPE
     )
     img_profile = models.ImageField(
         '프로필 이미지',
@@ -54,20 +59,37 @@ class User(AbstractUser):
         verbose_name = '사용자'
         verbose_name_plural = f'{verbose_name} 목록'
 
+    @property
+    def token(self):
+        return Token.objects.get_or_create(user=self)[0].key
+
     def follow_toggle(self, user):
         # 1. 주어진 user가 User객체인지 확인
         #    아니면 raise ValueError()
         # 2. 주어진 user를 follow하고 있으면 해제
-        #    안하고 있으면 follow 함
-
+        #    안 하고 있으면 follow함
         if not isinstance(user, User):
-            raise ValueError('"user" agrgument must be User instance!')
+            raise ValueError('"user" argument must be User instance!')
 
         relation, relation_created = self.following_user_relations.get_or_create(to_user=user)
         if relation_created:
-            return False
+            return True
         relation.delete()
-        return True
+        return False
+
+        # if user in self.following_users.all():
+        #     Relation.objects.filter(
+        #         from_user=self,
+        #         to_user=user,
+        #     ).delete()
+        # else:
+        #     # Relation중개모델을 직접 사용하는 방법
+        #     Relation.objects.create(
+        #         from_user=self,
+        #         to_user=user,
+        #     )
+        #     # Relation에 대한역참조 매니저를 사용하는 방법
+        #     self.following_user_relations.create(to_user=user)
 
 
 class Relation(models.Model):
@@ -90,3 +112,4 @@ class Relation(models.Model):
         return f'Relation (' \
                f'from: {self.from_user.username}, ' \
                f'to: {self.to_user.username})'
+

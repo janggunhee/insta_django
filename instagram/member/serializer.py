@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
@@ -14,7 +13,6 @@ class UserSerializer(serializers.ModelSerializer):
             'img_profile',
             'age',
         )
-
 
 class SignupSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
@@ -30,7 +28,6 @@ class SignupSerializer(serializers.ModelSerializer):
             'password1',
             'password2',
             'age',
-            'token',
         )
 
     def validate(self, data):
@@ -45,6 +42,16 @@ class SignupSerializer(serializers.ModelSerializer):
             img_profile=validated_data.get('img_profile'),
             age=validated_data['age'],
         )
+
+    def to_representation(self, instance):
+        # serializer된 형태를 결정
+        # super().to_representation()은 serialize된 기본 형태(dict)
+        ret = super().to_representation(instance)
+        data = {
+            'user': ret,
+            'token': instance.token,
+        }
+        return data
 
     # @staticmethod
     # def get_token(obj):

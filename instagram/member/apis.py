@@ -100,4 +100,8 @@ class FacebookLogin(APIView):
                 user_type=User.USER_TYPE_FACEBOOK,
             )
         # 유저 시리얼라이즈 결과를 Response
+        data = {
+            'user': UserSerializer(user).data,
+            'token': user.token,
+        }
         return Response(UserSerializer(user).data)

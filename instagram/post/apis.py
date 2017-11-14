@@ -1,16 +1,18 @@
-from django.http import Http404
-from requests import post
-from rest_framework import status, mixins, generics
+from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
+from member.serializer import UserSerializer
 from post.seriallizers import PostSerializer
+from utils.permissions import IsAuthorOrReadOnly
 from .models import Post
 
 
 class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -32,16 +34,45 @@ class PostList(generics.ListCreateAPIView):
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PostDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Post.objects.get(pk=pk)
-        except Post.DoesNOtExist:
-            raise
+# class PostDetail(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return Post.objects.get(pk=pk)
+#         except Post.DoesNOtExist:
+#             raise
+#
+#     def get(self, request, pk):
+#         Post = self.get_object(pk)
+#         serializer = PostSerializer(post, data=request.data)
+#         return Response(serializer.data)
 
-    def get(self, request, pk):
-        Post = self.get_object(pk)
-        serializer = PostSerializer(post, data=request.data)
-        return Response(serializer.data)
 
+class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (
+        IsAuthorOrReadOnly,
+
+    )
+
+class PostLikeToggle(generics.GenericAPIView):
+    queryset = Post.objects.all()
+    lookup_url_kwarg = 'post_pk'
+
+    def post(self, request, *args, **kwargs):
+        instance = self.get_object()
+        user = request.user
+        like_status = False
+        #
+        if user.like_posts.filter(pk=instance.pk):
+            user.like_posts.remove(instance)
+        else:
+            user.like_posts.add(instance)
+            like_status =True
+        data = {
+            'user': UserSerializer(user).data,
+            'post': PostSerializer(instance).data,
+            'result': like_status,
+        }
+        return Response()
 

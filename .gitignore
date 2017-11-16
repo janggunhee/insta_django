@@ -2,6 +2,10 @@
 .idea/
 .config_secret
 c.sh
+.media
+
+# Front code
+/front/
 
 # Created by https://www.gitignore.io/api/linux,macos,python,django,pycharm
 

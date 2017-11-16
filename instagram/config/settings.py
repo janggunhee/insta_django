@@ -86,7 +86,10 @@ FACEBOOK_SCOPE =[
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost',
+                 '.elasticbeanstalk.com',
+                 'api.janggunhee.com',
+]
 
 
 # Application definition

@@ -17,5 +17,10 @@ class SMSSerializer:
 
 class SendSMS(APIView):
     def post(self, request):
-        pass
+        # receiver, message키로 데이터 전송
+        # receiver의 번호로 message내용을 문자보내기
+        # Response에는 메시지 없이 status 200리턴
 
+        # /api/utils/sms/send/ 로 연결
+        # postman작성
+        pass

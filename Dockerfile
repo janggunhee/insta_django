@@ -1,4 +1,4 @@
-FROM base
+FROM        janggunhee/base
 MAINTAINER 	jan9.9unhee@gmail.com
 
 ENV         LANG C.UTF-8

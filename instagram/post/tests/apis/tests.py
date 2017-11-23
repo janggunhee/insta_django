@@ -19,7 +19,7 @@ User = get_user_model()
 
 
 class PostListViewTest(APILiveServerTestCase):
-    URL_API_POST_LIST_NAME = 'api-post'
+    URL_API_POST_LIST_NAME = 'api:post:post-list'
     URL_API_POST_LIST = '/api/post/'
     VIEW_CLASS = PostList
 
@@ -66,12 +66,11 @@ class PostListViewTest(APILiveServerTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # objects.count결과가 num과 같은지 확인
         self.assertEqual(Post.objects.count(), num)
-        # response로 돌아온 JSON리스트의 길이가 num과 같은지 확인
-        self.assertEqual(len(response.data), num)
-
+        # response로 돌아온 JSON리스트의 'count'(Object 총합 개수)가 num과 같은지 확인
+        self.assertEqual(response.data['count'], num)
 
         for i in range(num):
-            cur_post_Data = response.data[i]
+            cur_post_Data = response.data['results'][i]
             self.assertIn('pk', cur_post_Data)
             self.assertIn('author', cur_post_Data)
             self.assertIn('photo', cur_post_Data)

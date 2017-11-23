@@ -8,8 +8,9 @@ install:
  - pip install -r requirements.txt
 
 # script 전에 manage.py 디렉토리로 이동
-before_script:
-  - cd mysite
+before_install:
+  - openssl aes-256-cbc -K $encrypted_d1cf0bfee7b7_key -iv $encrypted_d1cf0bfee7b7_iv -in secrets.tar.enc -out secrets.tar -d
+  - tar xvf secret.x tar
 
 script:
 

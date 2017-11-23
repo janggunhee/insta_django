@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 
 from member.serializer import UserSerializer
+from post.paginations import PostPagination
 from post.seriallizers import PostSerializer
 from utils.permissions import IsAuthorOrReadOnly
 from .models import Post
@@ -12,7 +13,9 @@ class PostList(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
+        # permissions.IsAuthenticated,
     )
+    pagination_class = PostPagination
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

@@ -4,6 +4,9 @@
 c.sh
 .media
 
+# Travis CI
+secrets.tar
+
 # Front code
 /front/
 
